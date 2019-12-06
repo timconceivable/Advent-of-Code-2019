@@ -20,12 +20,8 @@ def run_code(code,sys_id):
         mode2 = int(str(full_op)[-4])
         mode3 = int(str(full_op)[-5])
         if (n+4 <= len(code)):
-            p1 = code[n+1]
-            if mode1 == 1:
-                p1 = n+1
-            p2 = code[n+2]
-            if mode2 == 1:
-                p2 = n+2
+            p1 = n+1 if mode1 == 1 else code[n+1]
+            p2 = n+2 if mode2 == 1 else code[n+2]
             p3 = code[n+3]
             if opcode == 1:
                 code[p3] = code[p1] + code[p2]
@@ -40,26 +36,14 @@ def run_code(code,sys_id):
                 print(code[p1],"",end='')
                 n += 2
             if opcode == 5:
-                if code[p1] != 0:
-                    n = code[p2]
-                else:
-                    n += 3
+                n = code[p2] if code[p1] != 0 else n + 3
             if opcode == 6:
-                if code[p1] == 0:
-                    n = code[p2]
-                else:
-                    n += 3
+                n = code[p2] if code[p1] == 0 else n + 3
             if opcode == 7:
-                if code[p1] < code[p2]:
-                    code[p3] = 1
-                else:
-                    code[p3] = 0
+                code[p3] = 1 if code[p1] < code[p2] else 0
                 n += 4
             if opcode == 8:
-                if code[p1] == code[p2]:
-                    code[p3] = 1
-                else:
-                    code[p3] = 0
+                code[p3] = 1 if code[p1] == code[p2] else 0
                 n += 4
 
 
