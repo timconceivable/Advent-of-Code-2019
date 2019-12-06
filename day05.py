@@ -8,46 +8,65 @@ def parse_data(filename):
 
 
 def run_code(code,sys_id):
-    i = 0
-    for n in range(0,len(code)):
+    n = 0
+    while n < len(code):
         full_op = "{0:0=6d}".format(code[n]).strip('-')
         opcode = int(str(full_op)[-2:])
         if opcode == 99:
-                print("!") #(n,"- STOP")
+                #print("( STOP",n,")")
+                n = len(code)
                 break
         mode1 = int(str(full_op)[-3])
         mode2 = int(str(full_op)[-4])
         mode3 = int(str(full_op)[-5])
-        if n == i and (n+2 <= len(code)):
+        if (n+4 <= len(code)):
             p1 = code[n+1]
             if mode1 == 1:
                 p1 = n+1
-            if (opcode > 2):
-                if opcode == 3:
-                    code[p1] = sys_id
-                    i += 2
-                if opcode == 4:
-                    print(code[p1],"",end='')
-                    i += 2
-            elif (n+4 <= len(code)):
-                p2 = code[n+2]
-                if mode2 == 1:
-                    p2 = n+2
-                p3 = code[n+3]
-                if opcode == 1:
-                    code[p3] = code[p1] + code[p2]
-                    i += 4
-                if opcode == 2:
-                    code[p3] = code[p1] * code[p2]
-                    i += 4
-    return code[0]
+            p2 = code[n+2]
+            if mode2 == 1:
+                p2 = n+2
+            p3 = code[n+3]
+            if opcode == 1:
+                code[p3] = code[p1] + code[p2]
+                n += 4
+            if opcode == 2:
+                code[p3] = code[p1] * code[p2]
+                n += 4
+            if opcode == 3:
+                code[p1] = sys_id
+                n += 2
+            if opcode == 4:
+                print(code[p1],"",end='')
+                n += 2
+            if opcode == 5:
+                if code[p1] != 0:
+                    n = code[p2]
+                else:
+                    n += 3
+            if opcode == 6:
+                if code[p1] == 0:
+                    n = code[p2]
+                else:
+                    n += 3
+            if opcode == 7:
+                if code[p1] < code[p2]:
+                    code[p3] = 1
+                else:
+                    code[p3] = 0
+                n += 4
+            if opcode == 8:
+                if code[p1] == code[p2]:
+                    code[p3] = 1
+                else:
+                    code[p3] = 0
+                n += 4
 
 
 def main():
-    intcode = parse_data(r'C:\Users\Tim Conceivable\CODE\Advent-of-Code-2019\day05-input.txt')
-    sys_id = 1 #int(input("please enter the ID of the system to test:"))
-    diagnostic = run_code(intcode,sys_id)
-    #print(diagnostic)
+    intcode = parse_data(r'day05-input.txt')
+    sys_id = int(input("enter the system ID to test:"))
+    run_code(intcode,sys_id)
 
 
 if __name__ == "__main__":
